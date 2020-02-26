@@ -50,7 +50,7 @@ void Game::Input() {
 		if (KeyIsDown(39, true, false) && CameraUp)
 			Camera++;
 
-		if (KeyIsDown('A', true, false) && !CameraUp && !Left.Broke) {
+		if (KeyIsDown('A', true, false) && !CameraUp) {
 
 			Left.Lit = !Left.Lit;
 			if (Right.Lit)
@@ -58,7 +58,7 @@ void Game::Input() {
 
 		}
 
-		if (KeyIsDown('D', true, false) && !CameraUp && !Right.Broke) {
+		if (KeyIsDown('D', true, false) && !CameraUp) {
 
 			Right.Lit = !Right.Lit;
 			if (Left.Lit)
@@ -284,11 +284,11 @@ void Game::Draw_LeftDoor(int x, int y) {
 		else if (Bonnie.Room == 12 && Left.Lit && !CameraUp)
 			DrawSprite(79, x, y);
 
+		else if (Left.Broke && !CameraUp && Left.Lit)
+			DrawSprite(77, x, y);
+
 		else if (Left.Lit && !CameraUp)
 			DrawSprite(81, x, y);
-
-		else if (Left.Broke)
-			DrawSprite(77, x, y);
 
 		else
 			DrawSprite(75, x, y);
@@ -317,11 +317,11 @@ void Game::Draw_RightDoor(int x, int y) {
 		if (Chica.Room == 12 && Right.Lit && !CameraUp)
 		DrawSprite(78, x, y);
 
+		else if (Right.Broke && !CameraUp && Right.Lit)
+			DrawSprite(77, x, y);
+
 		else if (Right.Lit && !CameraUp)
 			DrawSprite(81, x, y);
-
-		else if (Right.Broke && !CameraUp)
-			DrawSprite(77, x, y);
 
 		else
 			DrawSprite(75, x, y);

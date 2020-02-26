@@ -85,9 +85,9 @@ private:
 
 		/* AI Levels */
 		Freddy.AI = 0;
-		Bonnie.AI = 7;
+		Bonnie.AI = 20;
 		Chica.AI = 2;
-		Foxy.AI = 4;
+		Foxy.AI = 1;
 
 		/* Room positions */
 		Freddy.Room = 1;
