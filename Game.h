@@ -7,6 +7,7 @@ static uniform_int_distribution<int> halfandhalf(1, 2);
 static uniform_int_distribution<int> ChicaRNG(1, 2); // Chica RNG factor
 static uniform_int_distribution<int> BonnieRNG(3, 4); // Bonnie RNG factor
 static uniform_real_distribution<float> FoxyRNG(.83, 16.67); // Foxy RNG factor
+static uniform_int_distribution<int> GFreddyRNG(1, 100000); // GFreddy RNG factor
 static uniform_int_distribution<int> AI_Dist(1, 20); // 1-20 AI Distribution for determining movement
 
 class Game {

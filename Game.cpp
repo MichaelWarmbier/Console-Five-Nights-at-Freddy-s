@@ -510,7 +510,7 @@ bool Game::MovementOpportunity(int AI) {
 
 void Game::GFreddyAI() {
 
-	if (Camera == 10 && CameraUp && halfandhalf(generator) <= 1 && GetTimeSince(GFreddy.WaitTS) > 1 && !GFreddy.Active && !GFreddy.Waiting) {
+	if (Camera == 10 && CameraUp && GFreddyRNG(generator) == 1 && GetTimeSince(GFreddy.WaitTS) > 1 && !GFreddy.Active && !GFreddy.Waiting) {
 
 		GFreddy.Active = true;
 		GFreddy.Room = 10;
