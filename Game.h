@@ -4,14 +4,16 @@
 /* RNG Engine and distributions */
 static default_random_engine generator;
 static uniform_int_distribution<int> halfandhalf(1, 2);
-static uniform_int_distribution<int> onethird(1, 3);
+static uniform_int_distribution<int> ChicaRNG(1, 2); // Chica RNG factor
+static uniform_int_distribution<int> BonnieRNG(3, 4); // Bonnie RNG factor
+static uniform_real_distribution<float> FoxyRNG(.83, 16.67); // Foxy RNG factor
 static uniform_int_distribution<int> AI_Dist(1, 20); // 1-20 AI Distribution for determining movement
-static uniform_real_distribution<float> FoxyLockDist(.83, 16.67); // Foxy lock distribution for determining how long foxy remains locked when camera is viewed
 
 class Game {
 private:
 	/* Debugging flags */
 	const bool FreezePowerDrain = false;
+	const bool AlwaysWorkingCamera = false;
 
 	/* Animatronic objects */
 	Animatronic Freddy;
@@ -61,12 +63,13 @@ private:
 	void Draw_Clock(int x, int y);
 
 	/* Animatronic AI Scripts */
+	void BonnieAI();
 	void ChicaAI(); 
 	void FoxyAI(); 
 
 	/* Misc Scripts */
 	void BeginGameOver(); // Sets GameOver to true and adds delay to account for jumpscare
-	void CheckCameraError(); // Check if a camera error should occur
+	void CheckCameraError(int room, bool & moved); // Check if a camera error should occur
 	bool MovementOpportunity(int AI); // Check if an animatronics AI level allows for movement
 	void SetFoxyLock(); // Sets foxy lock using RNG
 	
@@ -82,9 +85,9 @@ private:
 
 		/* AI Levels */
 		Freddy.AI = 0;
-		Bonnie.AI = 0;
-		Chica.AI = 10;
-		Foxy.AI = 0;
+		Bonnie.AI = 7;
+		Chica.AI = 2;
+		Foxy.AI = 4;
 
 		/* Room positions */
 		Freddy.Room = 1;

@@ -32,6 +32,9 @@ void Game::Input() {
 
 			CameraUp = !CameraUp;
 
+			if (Camera == 2 && Bonnie.Room == 2 && AI_Dist(generator) <= 5)
+				Bonnie.Scare = true;
+
 			if (CameraUp && !Foxy.Lock) {
 
 				Foxy.Lock = true;
@@ -109,12 +112,14 @@ void Game::Input() {
 }
 void Game::Logic() {
 
-	FoxyAI();
 	ChicaAI();
+	BonnieAI();
+	FoxyAI();
 
-	if (CameraUp && Bonnie.Room == 2 && onethird(generator) == 1)
+
+	if (CameraUp && Bonnie.Room == 2 && Bonnie.Scare)
 		Bonnie.Scare = true;
-	else
+	else 
 		Bonnie.Scare = false;
 
 	if (Camera < 1)
@@ -567,33 +572,45 @@ void Game::ChicaAI() {
 
 		if (MovementOpportunity(Chica.AI)) {
 
+			int t = ChicaRNG(generator);
+
 			Chica.Moved = true;
-			CheckCameraError();
+			CheckCameraError(Chica.Room, Chica.Moved);
 
 			if (Chica.Room == 1)
 				Chica.Room = 4;
 
 			else if (Chica.Room == 4) {
 
-				int t = onethird(generator);
-
 				if (t == 1)
 					Chica.Room = 5;
 
-				else if (t == 2)
-					Chica.Room = 9;
-
 				else
-					Chica.Room = 8;
+					Chica.Room = 9;
 
 			}
 
-			else if (Chica.Room == 5 || Chica.Room == 9)
-				Chica.Room = 4;
+			else if (Chica.Room == 5) {
+				
+				if (t == 1)
+					Chica.Room = 9;
+
+				else
+					Chica.Room = 4;
+
+			}
+
+			else if (Chica.Room == 9) {
+				
+				if (t == 1)
+					Chica.Room = 8;
+
+				else
+					Chica.Room = 5;
+
+			}
 
 			else if (Chica.Room == 8) {
-
-				int t = halfandhalf(generator);
 
 				if (t == 1)
 					Chica.Room = 4;
@@ -604,8 +621,6 @@ void Game::ChicaAI() {
 			}
 
 			else if (Chica.Room == 11) {
-
-				int t = halfandhalf(generator);
 
 				if (t == 1)
 					Chica.Room = 8;
@@ -627,12 +642,12 @@ void Game::ChicaAI() {
 				}
 
 				else
-					Chica.Room = 4;
+					Chica.Room = 8;
 
 			}
 
 			Chica.Moved = true;
-			CheckCameraError();
+			CheckCameraError(Chica.Room, Chica.Moved);
 
 		}
 
@@ -659,9 +674,126 @@ void Game::ChicaAI() {
 
 }
 
+void Game::BonnieAI() {
+
+	if (GetTimeSince(Bonnie.MoveTS) > 4.97) {
+
+		Bonnie.MoveTS = GetTime();
+
+		if (MovementOpportunity(Bonnie.AI)) {
+
+			int t = BonnieRNG(generator);
+
+			Bonnie.Moved = true;
+			CheckCameraError(Bonnie.Room, Bonnie.Moved);
+
+			if (Bonnie.Room == 1) {
+
+				if (t == 3)
+					Bonnie.Room = 4;
+
+				else
+					Bonnie.Room = 2;
+
+			}
+
+			else if (Bonnie.Room == 4) {
+
+				if (t == 3)
+					Bonnie.Room = 2;
+
+				else
+					Bonnie.Room = 7;
+
+			}
+
+			else if (Bonnie.Room == 2) {
+
+				if (t == 3)
+					Bonnie.Room = 7;
+
+				else
+					Bonnie.Room = 4;
+
+			}
+
+			else if (Bonnie.Room == 7) {
+
+				if (t == 3)
+					Bonnie.Room = 6;
+
+				else
+					Bonnie.Room = 10;
+
+			}
+
+			else if (Bonnie.Room == 6) {
+
+				if (t == 4)
+					Bonnie.Room = 7;
+
+				else
+					Bonnie.Room = 12;
+
+			}
+
+			else if (Bonnie.Room == 10) {
+
+				if (t == 3)
+					Bonnie.Room = 12;
+
+				else
+					Bonnie.Room = 6;
+
+			}
+
+			else if (Bonnie.Room == 12) {
+
+				if (Left.Open) {
+
+					Bonnie.Room = 14;
+					Left.Broke = true;
+					Left.Lit = false;
+					Left.Open = true;
+
+				}
+
+				else
+					Bonnie.Room = 4;
+
+			}
+
+			Bonnie.Moved = true;
+			CheckCameraError(Bonnie.Room, Bonnie.Moved);
+
+		}
+
+	}
+
+	if (Bonnie.Room == 14) {
+
+		if (CameraUp) {
+
+			Bonnie.Room = 15;
+			Bonnie.WaitTS = GetTime();
+
+		}
+
+	}
+
+	if (Bonnie.Room == 15 && (!CameraUp || GetTimeSince(Bonnie.WaitTS) > 15)) {
+
+		CameraUp = false;
+		BeginGameOver();
+		Bonnie.Room = 13;
+
+	}
+
+}
+
 void Game::SetFoxyLock() {
 
-	Foxy.LockDuration = FoxyLockDist(generator);
+	Foxy.LockDuration = FoxyRNG(generator);
 	Foxy.LockTS = GetTime();
 
 }
@@ -730,31 +862,15 @@ void Game::Draw_Clock(int x, int y) {
 		GameOver = true;
 }
 
-void Game::CheckCameraError() {
+void Game::CheckCameraError(int room, bool & moved) {
 
-	if (Freddy.Moved && Freddy.Room == Camera) {
-
-		CameraError = true;
-		CameraErrorTS = GetTime();
-
-	}
-
-	if (Bonnie.Moved && Bonnie.Room == Camera) {
+	if (moved && room == Camera && !AlwaysWorkingCamera) {
 
 		CameraError = true;
 		CameraErrorTS = GetTime();
 
 	}
 
-	if (Chica.Moved && Chica.Room == Camera) {
-
-		CameraError = true;
-		CameraErrorTS = GetTime();
-
-	}
-
-	Freddy.Moved = false;
-	Bonnie.Moved = false;
-	Chica.Moved = false;
+	moved = false;
 
 }
