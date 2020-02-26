@@ -158,7 +158,7 @@ const int SpriteInfo[102][4] {
 	  24,  963,  210,  110, // Instructions					99		  
 	  24, 1073,  210,  110, // Instructions EMPTY			100		  
 	   5,  816,   53,   15, // IT'S ME						101
-    1512,  795,   94,  137, // G. Freddy East Hall			102
+    1512,  822,   94,  137, // G. Freddy East Hall			102
 
 };
 

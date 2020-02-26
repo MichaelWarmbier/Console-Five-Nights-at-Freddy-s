@@ -66,6 +66,7 @@ private:
 	void BonnieAI();
 	void ChicaAI(); 
 	void FoxyAI(); 
+	void GFreddyAI();
 
 	/* Misc Scripts */
 	void BeginGameOver(); // Sets GameOver to true and adds delay to account for jumpscare
@@ -85,15 +86,16 @@ private:
 
 		/* AI Levels */
 		Freddy.AI = 0;
-		Bonnie.AI = 20;
-		Chica.AI = 2;
-		Foxy.AI = 1;
+		Bonnie.AI = 0;
+		Chica.AI = 0;
+		Foxy.AI = 0;
 
 		/* Room positions */
 		Freddy.Room = 1;
 		Bonnie.Room = 1;
 		Chica.Room = 1;
 		Foxy.Room = 3;
+		GFreddy.Room = 0;
 
 		/* Flags for movement */
 		Freddy.Moved = false;
@@ -125,8 +127,11 @@ private:
 		Foxy.RunTS = 0;
 		Foxy.LockTS = GetTime();
 		Foxy.LockDuration = 0;
+
 		/* Golden Freddy Specific Properties */
 		GFreddy.Active = false;
+		GFreddy.WaitTS = GetTime();
+		GFreddy.Waiting = false;
 
 		/* Door properties */
 		Left.Lit = false;

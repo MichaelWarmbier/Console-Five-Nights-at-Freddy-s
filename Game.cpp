@@ -115,6 +115,7 @@ void Game::Logic() {
 	ChicaAI();
 	BonnieAI();
 	FoxyAI();
+	GFreddyAI();
 
 
 	if (CameraUp && Bonnie.Room == 2 && Bonnie.Scare)
@@ -251,7 +252,10 @@ void Game::Draw_Bathrooms(int x, int y) {
 
 void Game::Draw_Office(int x, int y) {
 
-	if (!CameraUp && Bonnie.Room != 13 && Chica.Room != 13 && Freddy.Room != 13 && Foxy.Room != 13)
+	if (!CameraUp && GFreddy.Room == 13)
+		DrawSprite(62, x, y);
+
+	else if (!CameraUp && Bonnie.Room != 13 && Chica.Room != 13 && Freddy.Room != 13 && Foxy.Room != 13)
 		DrawSprite(57, x, y);
 
 	else if (CameraUp && Bonnie.Room != 13 && Chica.Room != 13 && Freddy.Room != 13 && Foxy.Room != 13)
@@ -268,9 +272,6 @@ void Game::Draw_Office(int x, int y) {
 
 	else if (Foxy.Room == 13)
 		DrawSprite(61, x, y);
-
-	else if (!CameraUp && GFreddy.Active)
-		DrawSprite(56, x, y);
 
 }
 
@@ -504,6 +505,40 @@ void Game::Draw_Usage(int x, int y) {
 bool Game::MovementOpportunity(int AI) {
 
 	return (AI_Dist(generator) <= AI);
+
+}
+
+void Game::GFreddyAI() {
+
+	if (Camera == 10 && CameraUp && halfandhalf(generator) <= 1 && GetTimeSince(GFreddy.WaitTS) > 1 && !GFreddy.Active && !GFreddy.Waiting) {
+
+		GFreddy.Active = true;
+		GFreddy.Room = 10;
+
+	}
+
+	else if (GetTimeSince(GFreddy.WaitTS) > 1 && !GFreddy.Active && !GFreddy.Waiting)
+		GFreddy.WaitTS = GetTime();
+	
+	else if (GFreddy.Active && !CameraUp) {
+
+		GFreddy.WaitTS = GetTime();
+		GFreddy.Waiting = true;
+		GFreddy.Active = false;
+		GFreddy.Room = 13;
+
+	}
+
+	else if (GFreddy.Waiting && CameraUp) {
+
+		GFreddy.Waiting = false;
+		GFreddy.Room = 0;
+		GFreddy.WaitTS = GetTime();
+
+	}
+
+	else if (GetTimeSince(GFreddy.WaitTS) > 4 && GFreddy.Waiting)
+		abort();
 
 }
 
