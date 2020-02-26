@@ -38,8 +38,7 @@ void Game::Input() {
 				SetFoxyLock();
 
 			}
-			else if (!CameraUp)
-				Foxy.Lock = false;
+
 		}
 
 		if (KeyIsDown(37, true, false) && CameraUp)
@@ -504,6 +503,9 @@ bool Game::MovementOpportunity(int AI) {
 }
 
 void Game::FoxyAI() {
+
+	if (GetTimeSince(Foxy.LockTS) > Foxy.LockDuration && !CameraUp && Foxy.Lock)
+		Foxy.Lock = false;
 
 	if (GetTimeSince(Foxy.MoveTS) > 5.01 && !Foxy.Waiting && !Foxy.Running) {
 

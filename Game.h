@@ -83,8 +83,8 @@ private:
 		/* AI Levels */
 		Freddy.AI = 0;
 		Bonnie.AI = 0;
-		Chica.AI = 5;
-		Foxy.AI = 5;
+		Chica.AI = 10;
+		Foxy.AI = 0;
 
 		/* Room positions */
 		Freddy.Room = 1;
@@ -120,7 +120,7 @@ private:
 		Foxy.Attempts = 0;
 		Foxy.WaitTS = 0;
 		Foxy.RunTS = 0;
-		Foxy.LockTS = 0;
+		Foxy.LockTS = GetTime();
 		Foxy.LockDuration = 0;
 		/* Golden Freddy Specific Properties */
 		GFreddy.Active = false;
