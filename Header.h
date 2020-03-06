@@ -36,7 +36,7 @@ public:
 };
 
 /* Sprite Data */
-const int SpriteInfo[102][4] {
+const int SpriteInfo[103][4] {
 	/*	X	  Y	     W	   H      */
 
 		/* Variants of Show Stage */// Room 1
@@ -159,6 +159,8 @@ const int SpriteInfo[102][4] {
 	  24, 1073,  210,  110, // Instructions EMPTY			100		  
 	   5,  816,   53,   15, // IT'S ME						101
     1512,  822,   94,  137, // G. Freddy East Hall			102
+	1606,  854,   92,  122, // G. Freddy					103
+
 
 };
 

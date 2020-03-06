@@ -4,11 +4,13 @@
 /* RNG Engine and distributions */
 static default_random_engine generator;
 static uniform_int_distribution<int> halfandhalf(1, 2);
-static uniform_int_distribution<int> ChicaRNG(1, 2); // Chica RNG factor
-static uniform_int_distribution<int> BonnieRNG(3, 4); // Bonnie RNG factor
-static uniform_real_distribution<float> FoxyRNG(.83, 16.67); // Foxy RNG factor
-static uniform_int_distribution<int> GFreddyRNG(1, 100000); // GFreddy RNG factor
-static uniform_int_distribution<int> AI_Dist(1, 20); // 1-20 AI Distribution for determining movement
+static uniform_int_distribution<int> FreddyRNG(1, 4); // Freddy RNG
+static uniform_int_distribution<int> Freddy_JS_RNG(1, 5); // Freddy's Jumpscare RNG
+static uniform_int_distribution<int> BonnieRNG(3, 4); // Bonnie RNG
+static uniform_int_distribution<int> ChicaRNG(1, 2); // Chica RNG
+static uniform_real_distribution<float> FoxyRNG(.83, 16.67); // Foxy RNG
+static uniform_int_distribution<int> GFreddyRNG(1, 100000); // Golden Freddy RNG
+static uniform_int_distribution<int> AI_Dist(1, 20); // AI RNG for determining movement
 
 class Game {
 private:
@@ -26,16 +28,17 @@ private:
 	/* Door Objects */
 	Door Left;
 	Door Right;
+
 	/* Game data */
-	bool GameOver;
+	bool GameOver, ToggleHelp, NoPower;
 	double GameOverTS, GameTS, PowerTS;
 	double CameraErrorTS;
-	bool ToggleHelp;
 	
 	int Camera;
+	double PenaltyTS;
 	int Usage;
 	int Hour;
-	int Power;
+	double Power;
 	int Night;
 
 	bool CameraUp;
@@ -64,6 +67,7 @@ private:
 	void Draw_Clock(int x, int y);
 
 	/* Animatronic AI Scripts */
+	void FreddyAI();
 	void BonnieAI();
 	void ChicaAI(); 
 	void FoxyAI(); 
@@ -81,15 +85,14 @@ private:
 
  public:
 	/* Constructor */
-	 Game() :CameraUp(false), CameraError(false), Camera(1), Usage(0), GameOver(false), 
-		 Power(99), GameOverTS(0), GameTS(GetTime()), PowerTS(GetTime()), Night(1), Hour(0),
-		 ToggleHelp(false), CameraErrorTS(0) {
-
+	 Game() :CameraUp(false), CameraError(false), Camera(1), Usage(1), GameOver(false), 
+		 Power(2.99), GameOverTS(0), GameTS(GetTime()), PowerTS(GetTime()), Night(7), Hour(0),
+		 ToggleHelp(false), CameraErrorTS(0), NoPower(false), PenaltyTS(GetTime()) {
 		/* AI Levels */
 		Freddy.AI = 0;
-		Bonnie.AI = 5;
-		Chica.AI = 5;
-		Foxy.AI = 5;
+		Bonnie.AI = 0;
+		Chica.AI = 0;
+		Foxy.AI = 0;
 
 		/* Room positions */
 		Freddy.Room = 1;
@@ -112,6 +115,7 @@ private:
 
 		/* Freddy Specific Properties */
 		Freddy.Lock = false;
+		Freddy.Waiting = false;
 
 		/* Bonnie & Chica Specific Properties */
 		Bonnie.Scare = false;

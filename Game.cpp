@@ -16,8 +16,8 @@ void Game::Draw() {
 	Draw_LeftDoor(315, 579);
 	Draw_RightDoor(433, 579);
 
-	Draw_Usage(10, 610);
-	Draw_Power(10, 631);
+	Draw_Usage(7, 610);
+	Draw_Power(7, 631);
 	Draw_Clock(777, 15);
 
 	if (!ToggleHelp)
@@ -26,11 +26,12 @@ void Game::Draw() {
 		DrawSprite(100, 575, 542);
 }
 void Game::Input() {
-	if (!GameOver && GetConsoleWindow() == GetForegroundWindow()) {
+	if (!GameOver && GetConsoleWindow() == GetForegroundWindow() && !NoPower) {
 
 		if (KeyIsDown(32, true, false)) {
 
 			CameraUp = !CameraUp;
+			Left.Lit = Right.Lit = false;
 
 			if (Camera == 2 && Bonnie.Room == 2 && AI_Dist(generator) <= 5)
 				Bonnie.Scare = true;
@@ -74,6 +75,9 @@ void Game::Input() {
 		if (KeyIsDown('H', true, false))
 			ToggleHelp = !ToggleHelp;
 
+		if (KeyIsDown('C', true, true) && KeyIsDown('D', true, true) && KeyIsDown('0', true, true))
+			Hour = 6;
+
 		/* Numpad specific controls */
 			if (KeyIsDown(103, true, false) && CameraUp)
 				Camera = 2;
@@ -112,11 +116,15 @@ void Game::Input() {
 }
 void Game::Logic() {
 
-	ChicaAI();
-	BonnieAI();
-	FoxyAI();
-	GFreddyAI();
+	if (!GameOver && !NoPower) {
 
+		FreddyAI();
+		BonnieAI();
+		ChicaAI();
+		FoxyAI();
+		GFreddyAI();
+
+	}
 
 	if (CameraUp && Bonnie.Room == 2 && Bonnie.Scare)
 		Bonnie.Scare = true;
@@ -128,23 +136,90 @@ void Game::Logic() {
 	if (Camera > 11)
 		Camera = 11;
 
-	Usage = !Left.Open + !Right.Open + CameraUp + Left.Lit + Right.Lit;
+	Usage = !Left.Open + !Right.Open + CameraUp + Left.Lit + Right.Lit + 1;
 
 	if (!FreezePowerDrain)
 		PowerLogic();
 
-	if (GameOver && (GetTimeSince(GameOverTS) > 1.3 || Hour == 6)) {
+	if (GameOver && GetTimeSince(GameOverTS) > 1.3)
+		abort();
 
+	if (Hour == 6)
 		abort(); // temp
-		Freddy.AI = 0;
-		Bonnie.AI = 0;
-		Chica.AI = 0;
-		Foxy.AI = 0;
-
-	}
 
 	if (GetTimeSince(CameraErrorTS) > 4.6 && CameraError)
 		CameraError = false;
+
+	if (Power == -1) {
+
+		if (!NoPower) {
+
+			Freddy.Room = 14;
+			Freddy.Stage = 0;
+			Freddy.Waiting = false;
+			Left.Open = true, Right.Open = true, Left.Lit = false, Right.Lit = false;
+			Freddy.WaitTS = GetTime();
+			NoPower = true;
+			CameraUp = false;
+
+		}
+
+		if ((GetTimeSince(Freddy.WaitTS) > 5.00)) {
+
+			Freddy.Stage++;
+			Freddy.WaitTS = GetTime();
+
+			if (Freddy.Room == 14 && Freddy_JS_RNG(generator) == 1) {
+
+				Freddy.Room = 12;
+				Freddy.Stage = 0;
+				Freddy.WaitTS = GetTime();
+
+			}
+
+			else if (Freddy.Room == 12 && Freddy_JS_RNG(generator) == 2) {
+
+				Freddy.Room = 15;
+				Freddy.Stage = 0;
+				Freddy.WaitTS = GetTime();
+				Freddy.Waiting = true;
+
+			}
+
+		}
+
+		if (Freddy.Stage == 4 && Freddy.Room == 14 && !Freddy.Waiting) {
+
+			Freddy.Stage = 0;
+			Freddy.Room = 12;
+			Freddy.WaitTS = GetTime();
+
+		}
+
+		else if (Freddy.Stage == 4 && Freddy.Room == 12 && !Freddy.Waiting) {
+
+			Freddy.Stage = 0;
+			Freddy.Room = 15;
+			Freddy.WaitTS = GetTime();
+			Freddy.Waiting = true;
+
+		}
+
+		else if (Freddy.Waiting && GetTimeSince(Freddy.WaitTS) > 2) {
+
+			Freddy.WaitTS = GetTime();
+			
+			if (Freddy_JS_RNG(generator) == 1) {
+
+				BeginGameOver();
+				Freddy.Room = 13;
+				Freddy.Waiting = false;
+
+			}
+
+		}
+
+	}
 
 }
 
@@ -252,7 +327,10 @@ void Game::Draw_Bathrooms(int x, int y) {
 
 void Game::Draw_Office(int x, int y) {
 
-	if (!CameraUp && GFreddy.Room == 13)
+	if (NoPower)
+		DrawSprite(103, x, y);
+
+	else if (!CameraUp && GFreddy.Room == 13)
 		DrawSprite(62, x, y);
 
 	else if (!CameraUp && Bonnie.Room != 13 && Chica.Room != 13 && Freddy.Room != 13 && Foxy.Room != 13)
@@ -508,6 +586,80 @@ bool Game::MovementOpportunity(int AI) {
 
 }
 
+void Game::FreddyAI() {
+
+	if (GetTimeSince(Freddy.MoveTS) > 3.02) {
+
+		Freddy.MoveTS = GetTime();
+
+		if (MovementOpportunity(Freddy.AI) && !Freddy.Waiting && !Freddy.Lock) {
+
+			Freddy.Waiting = true;
+			Freddy.LockTS = GetTime();
+
+		}
+
+		if (!Freddy.Lock && GetTimeSince(Freddy.LockTS) > (16.67 - 1.67 * Freddy.AI) && Freddy.Waiting) {
+
+			Freddy.Moved = true;
+			CheckCameraError(Freddy.Room, Freddy.Moved);
+			Freddy.Waiting = false;
+
+			if (Freddy.Room == 1 && Chica.Room != 1 && Bonnie.Room != 1)
+				Freddy.Room = 4;
+
+			else if (Freddy.Room == 4)
+				Freddy.Room = 5;
+
+			else if (Freddy.Room == 5)
+				Freddy.Room = 9;
+
+			else if (Freddy.Room == 9)
+				Freddy.Room = 8;
+
+			else if (Freddy.Room == 8)
+				Freddy.Room = 11;
+
+			else if (Freddy.Room == 11 && Right.Open) {
+
+				Freddy.Room = 14;
+				Freddy.WaitTS = GetTime();
+			}
+
+			else if (Freddy.Room == 11 && !Right.Open)
+				Freddy.Room = 8;
+
+			Freddy.Moved = true;
+			CheckCameraError(Freddy.Room, Freddy.Moved);
+
+		}
+
+	}
+
+	if (Freddy.Room == 14 && !CameraUp && GetTimeSince(Freddy.WaitTS) > 1 && Freddy.AI != 0) {
+
+		Freddy.WaitTS = GetTime();
+
+		if (FreddyRNG(generator) == 1) {
+
+			Freddy.Room = 13;
+			BeginGameOver();
+
+		}
+
+	}
+
+	if (CameraUp && Freddy.Room != 11)
+		Freddy.Lock = true;
+
+	else if ((Camera == 11 && CameraUp && Freddy.Room == 11) || (!CameraUp && Freddy.Room == 11))
+		Freddy.Lock = true;
+
+	else
+		Freddy.Lock = false;
+
+}
+
 void Game::GFreddyAI() {
 
 	if (Camera == 10 && CameraUp && GFreddyRNG(generator) == 1 && GetTimeSince(GFreddy.WaitTS) > 1 && !GFreddy.Active && !GFreddy.Waiting) {
@@ -590,7 +742,7 @@ void Game::FoxyAI() {
 		else {
 
 			Foxy.Room = 3;
-			Power -= 1 + (5 * Foxy.Attempts);
+			Power -= 1 + (5.0 * Foxy.Attempts);
 			Foxy.Attempts++;
 
 		}
@@ -849,10 +1001,10 @@ void Game::Draw_Power(int x, int y) {
 
 	DrawSprite(86, x, y + 1);
 
-	if (Power > 9) {
+	if (int(Power) > 9) {
 
-		DrawSprite((Power / 10) + 88, x + 144, y);
-		DrawSprite((Power % 10) + 88, x + 155, y);
+		DrawSprite((int(Power) / 10) + 88, x + 144, y);
+		DrawSprite((int(Power) % 10) + 88, x + 155, y);
 		DrawSprite(87, x + 166, y);
 		DrawSprite(98, x + 185, y);
 
@@ -860,7 +1012,7 @@ void Game::Draw_Power(int x, int y) {
 
 	else {
 
-		DrawSprite(Power + 88, x + 144, y);
+		DrawSprite(int(Power) + 88, x + 144, y);
 		DrawSprite(87, x + 155, y);
 		DrawSprite(98, x + 174, y);
 		DrawSprite(98, x + 193, y);
@@ -876,9 +1028,16 @@ void Game::PowerLogic() {
 	if (Night > 5)
 		tNight = 5;
 
-	if (GetTimeSince(PowerTS) > ((10 - (tNight - 1 + ((tNight != 1) * 3))) / (Usage + 1))) {
+	if (GetTimeSince(PenaltyTS) > (8.0 - tNight) && tNight != 1) {
+
+		Power -= 1.3;
+		PenaltyTS = GetTime();
+
+	}
+
+	if (GetTimeSince(PowerTS) > (10.00 / Usage)) {
 		
-		Power--;
+		Power -= 1.0;
 		PowerTS = GetTime();
 
 	}
@@ -899,7 +1058,7 @@ void Game::Draw_Clock(int x, int y) {
 
 void Game::CheckCameraError(int room, bool & moved) {
 
-	if (moved && room == Camera && !AlwaysWorkingCamera) {
+	if (moved && room == Camera && !AlwaysWorkingCamera&& CameraUp) {
 
 		CameraError = true;
 		CameraErrorTS = GetTime();
