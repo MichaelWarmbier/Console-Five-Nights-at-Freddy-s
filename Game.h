@@ -30,7 +30,7 @@ private:
 	Door Right;
 
 	/* Game data */
-	bool GameOver, ShowHelp, NoPower, Win;
+	bool GameOver, ShowHelp, NoPower;
 	double GameOverTS, GameTS, PowerTS, TransitionTS;
 	double CameraErrorTS;
 	
@@ -85,7 +85,7 @@ private:
 
  public:
 
-	 bool Exit = false; // Exit flag
+	 bool Exit, Win; // Exit flag
 	 int Night;
 
 	/* Constructor */

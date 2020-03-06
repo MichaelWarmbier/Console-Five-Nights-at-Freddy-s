@@ -29,8 +29,8 @@ int main() {
 				Program->EndGame();
 
 		}
-
-		LevelCarry += 1 * (Gameplay->Night < 5);
+		if (Gameplay->Win)
+			LevelCarry += 1 * (Gameplay->Night < 5);
 		delete Gameplay;
 
 	}
