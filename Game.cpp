@@ -1,32 +1,42 @@
 #include "Game.h"
+#include "FNAF.h"
+
 void Game::Draw() {
-	Draw_BackStage(10, 78);
-	Draw_ShowStage(279, 10);
-	Draw_PartyRoom(122, 78);
-	Draw_Bathrooms(652, 122);
-	Draw_WestHall(221, 360);
-	Draw_EastHall(459, 360);
-	Draw_WestHallCorner(221, 518);
-	Draw_EastHallCorner(459, 518);
-	Draw_Kitchen(579, 360);
-	Draw_Closet(109, 420);
-	Draw_PirateCove(36, 247);
-	Draw_Office(341, 533);
 
-	Draw_LeftDoor(315, 579);
-	Draw_RightDoor(433, 579);
+		/* Rooms */
+		Draw_BackStage(10, 78);
+		Draw_ShowStage(279, 10);
+		Draw_PartyRoom(122, 78);
+		Draw_Bathrooms(652, 122);
+		Draw_WestHall(221, 360);
+		Draw_EastHall(459, 360);
+		Draw_WestHallCorner(221, 518);
+		Draw_EastHallCorner(459, 518);
+		Draw_Kitchen(579, 360);
+		Draw_Closet(109, 420);
+		Draw_PirateCove(36, 247);
+		Draw_Office(341, 533);
 
-	Draw_Usage(7, 610);
-	Draw_Power(7, 631);
-	Draw_Clock(777, 15);
+		/* Doors */
+		Draw_LeftDoor(315, 579);
+		Draw_RightDoor(433, 579);
 
-	if (!ToggleHelp)
-		DrawSprite(99, 575, 542);
-	else
-		DrawSprite(100, 575, 542);
+		/* HUD */
+		Draw_Usage(7, 610);
+		Draw_Power(7, 631);
+		Draw_Clock(777, 15);
+
+		/* Help */
+		if (!ShowHelp)
+			DrawSprite(99, 563, 542);
+		else
+			DrawSprite(100, 563, 542);
+
 }
+
 void Game::Input() {
-	if (!GameOver && GetConsoleWindow() == GetForegroundWindow() && !NoPower) {
+
+	if (!GameOver && !Win && GetConsoleWindow() == GetForegroundWindow() && !NoPower) {
 
 		if (KeyIsDown(32, true, false)) {
 
@@ -73,7 +83,7 @@ void Game::Input() {
 			Right.Open = !Right.Open;
 		
 		if (KeyIsDown('H', true, false))
-			ToggleHelp = !ToggleHelp;
+			ShowHelp = !ShowHelp;
 
 		if (KeyIsDown('C', true, true) && KeyIsDown('D', true, true) && KeyIsDown('0', true, true))
 			Hour = 6;
@@ -114,7 +124,9 @@ void Game::Input() {
 	}
 
 }
+
 void Game::Logic() {
+
 
 	if (!GameOver && !NoPower) {
 
@@ -128,7 +140,7 @@ void Game::Logic() {
 
 	if (CameraUp && Bonnie.Room == 2 && Bonnie.Scare)
 		Bonnie.Scare = true;
-	else 
+	else
 		Bonnie.Scare = false;
 
 	if (Camera < 1)
@@ -141,16 +153,27 @@ void Game::Logic() {
 	if (!FreezePowerDrain)
 		PowerLogic();
 
-	if (GameOver && GetTimeSince(GameOverTS) > 1.3)
-		abort();
+	if (GameOver && GetTimeSince(GameOverTS) > 1.3) {
 
-	if (Hour == 6)
-		abort(); // temp
+		Exit = true;
+
+	}
+
+	if (Hour == 6) {
+
+		Win = Exit = true;
+		TransitionTS = GetTime();
+		system("CLS");
+
+		while (GetTimeSince(TransitionTS) < 4)
+			DrawSprite(111, 385, 252);
+
+	}
 
 	if (GetTimeSince(CameraErrorTS) > 4.6 && CameraError)
 		CameraError = false;
 
-	if (Power == -1) {
+	if (Power <= 0) {
 
 		if (!NoPower) {
 
@@ -208,7 +231,7 @@ void Game::Logic() {
 		else if (Freddy.Waiting && GetTimeSince(Freddy.WaitTS) > 2) {
 
 			Freddy.WaitTS = GetTime();
-			
+
 			if (Freddy_JS_RNG(generator) == 1) {
 
 				BeginGameOver();
@@ -220,6 +243,7 @@ void Game::Logic() {
 		}
 
 	}
+
 
 }
 
@@ -327,7 +351,10 @@ void Game::Draw_Bathrooms(int x, int y) {
 
 void Game::Draw_Office(int x, int y) {
 
-	if (NoPower)
+	if (NoPower && Freddy.Room == 13)
+		DrawSprite(112, x, y);
+
+	else if (NoPower)
 		DrawSprite(103, x, y);
 
 	else if (!CameraUp && GFreddy.Room == 13)

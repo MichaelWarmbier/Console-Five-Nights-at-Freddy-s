@@ -5,17 +5,33 @@
 
 int main() {
 
+	int LevelCarry = 1;
+
 	SetConsoleSize();
 	ShowConsoleCursor(false);
-	FNAF* Program = new FNAF;
-	Program->BeginGame();
 	SetConsoleTitleA("Five Nights at Freddy's");
 
-	while (Program->GameStatus()) {
+	FNAF* Program = new FNAF;
 
-		Program->Gameplay.Draw();
-		Program->Gameplay.Input();
-		Program->Gameplay.Logic();
+	while (Program->ProgramStatus()) {
+
+		Program->BeginGame(); // temp
+
+		Game* Gameplay = new Game(LevelCarry);
+
+		while (Program->GameStatus()) {
+
+			Gameplay->Draw();
+			Gameplay->Input();
+			Gameplay->Logic();
+
+			if (Gameplay->Exit)
+				Program->EndGame();
+
+		}
+
+		LevelCarry += 1 * (Gameplay->Night < 5);
+		delete Gameplay;
 
 	}
 
@@ -64,7 +80,7 @@ void SetConsoleSize() {
 	double horzScale = ((double)cxPhysical / (double)cxLogical);
 	double vertScale = ((double)cyPhysical / (double)cyLogical);
 
-	SetWindowPos(console, HWND_TOP, 0, 0, double(857) / horzScale + 4, double(705) / vertScale, SWP_NOMOVE); // Resize without moving where the console window was placed
+	SetWindowPos(console, HWND_TOP, 0, 0, double(857) / horzScale + 4, double(710) / vertScale, SWP_NOMOVE); // Resize without moving where the console window was placed
 
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO info;

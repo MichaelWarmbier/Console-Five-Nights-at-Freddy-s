@@ -36,9 +36,9 @@ public:
 };
 
 /* Sprite Data */
-const int SpriteInfo[103][4] {
-	/*	X	  Y	     W	   H      */
+const int SpriteInfo[112][4] {
 
+	/*	X	  Y	     W	   H      */
 		/* Variants of Show Stage */// Room 1
 		0,    0,   236,    68, // Hidden					1
 		0,   68,   236,    68, // Empty						2
@@ -154,12 +154,23 @@ const int SpriteInfo[103][4] {
 	 207,  870,   11,   15, // 9							97
 	 207,  900,   19,   15, // Num EMPTY					98
 
-
-	  24,  963,  210,  110, // Instructions					99		  
-	  24, 1073,  210,  110, // Instructions EMPTY			100		  
+	  20, 1109,  272,   99, // Instructions					99		  
+	  24, 1381,  272,   99, // Instructions EMPTY			100		  
 	   5,  816,   53,   15, // IT'S ME						101
     1512,  822,   94,  137, // G. Freddy East Hall			102
-	1606,  854,   92,  122, // G. Freddy					103
+	1606,  854,   92,  122, // Dark Office					103
+
+	 314, 1275,  114,   38, // NIGHT 1						104
+	 314, 1313,  114,   38, // NIGHT 2						105
+	 314, 1351,  114,   38, // NIGHT 3						106
+	 314, 1389,  114,   38, // NIGHT 4						107
+	 314, 1427,  114,   38, // NIGHT 5						108
+	 314, 1465,  114,   38, // NIGHT 6						109
+	 314, 1503,  114,   38, // NIGHT 7						110
+	 489, 1303,   71,   29, // 6 AM							111
+
+	1606,  976,   92,  122, // Freddy Dark Office			112
+
 
 
 };

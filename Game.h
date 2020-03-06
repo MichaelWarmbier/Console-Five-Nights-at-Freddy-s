@@ -30,8 +30,8 @@ private:
 	Door Right;
 
 	/* Game data */
-	bool GameOver, ToggleHelp, NoPower;
-	double GameOverTS, GameTS, PowerTS;
+	bool GameOver, ShowHelp, NoPower, Win;
+	double GameOverTS, GameTS, PowerTS, TransitionTS;
 	double CameraErrorTS;
 	
 	int Camera;
@@ -39,10 +39,10 @@ private:
 	int Usage;
 	int Hour;
 	double Power;
-	int Night;
 
 	bool CameraUp;
 	bool CameraError;
+
 
 	/* Drawing Subroutines */
 		/* Rooms */
@@ -84,10 +84,50 @@ private:
 
 
  public:
+
+	 bool Exit = false; // Exit flag
+	 int Night;
+
 	/* Constructor */
-	 Game() :CameraUp(false), CameraError(false), Camera(1), Usage(1), GameOver(false), 
-		 Power(2.99), GameOverTS(0), GameTS(GetTime()), PowerTS(GetTime()), Night(7), Hour(0),
-		 ToggleHelp(false), CameraErrorTS(0), NoPower(false), PenaltyTS(GetTime()) {
+	 Game(int Level) {
+
+		 TransitionTS = GetTime();
+		 Night = Level;
+
+		 while (GetTimeSince(TransitionTS) < 4) {
+
+			 switch (Night) {
+
+				case 1: DrawSprite(104, 365, 252); break;
+				case 2: DrawSprite(105, 365, 252); break;
+				case 3: DrawSprite(106, 365, 252); break;
+				case 4: DrawSprite(107, 365, 252); break;
+				case 5: DrawSprite(108, 365, 252); break;
+				case 6: DrawSprite(109, 365, 252); break;
+				case 7: DrawSprite(110, 365, 252); break;
+
+			 }
+
+		 }
+
+		 /* Game data */
+		 CameraUp = false;
+		 CameraError = false;
+		 Camera = 1;
+		 Usage = 1;
+		 GameOver = false;
+		 ShowHelp = (Night == 1);
+		 CameraErrorTS = 0;
+		 NoPower = false;
+		 PenaltyTS = GetTime();
+		 Hour = 0;
+		 GameOverTS = 0;
+		 GameTS = GetTime();
+		 Power = 99.99;
+		 PowerTS = GetTime();
+		 Win = false;
+		 Exit = false;
+
 		/* AI Levels */
 		Freddy.AI = 0;
 		Bonnie.AI = 0;
@@ -146,7 +186,6 @@ private:
 		Left.Broke = false;
 		Right.Broke = false;
 
-		ToggleHelp = (Night > 1); // Help will only force itself to appear on Night 1
 	};
 
 	/* Primary Routines */
