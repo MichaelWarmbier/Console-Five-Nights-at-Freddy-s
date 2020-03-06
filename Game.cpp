@@ -244,6 +244,30 @@ void Game::Logic() {
 
 	}
 
+	if (GFreddy.Stage == 0 && Hour == 2) {
+
+		GFreddy.Stage++;
+		Bonnie.AI++;
+
+	}
+
+	else if (GFreddy.Stage == 1 && Hour == 3) {
+
+		GFreddy.Stage++;
+		Bonnie.AI++;
+		Chica.AI++;
+		Foxy.AI++;
+
+	}
+
+	else if (GFreddy.Stage == 2 && Hour == 4) {
+
+		GFreddy.Stage++;
+		Bonnie.AI++;
+		Chica.AI++;
+		Foxy.AI++;
+
+	}
 
 }
 

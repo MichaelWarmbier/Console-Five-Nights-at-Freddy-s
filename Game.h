@@ -129,10 +129,51 @@ private:
 		 Exit = false;
 
 		/* AI Levels */
-		Freddy.AI = 0;
-		Bonnie.AI = 0;
-		Chica.AI = 0;
-		Foxy.AI = 0;
+		 switch (Night) {
+
+		 case 1:
+			 Freddy.AI = 0;
+			 Bonnie.AI = 0;
+			 Chica.AI = 0;
+			 Foxy.AI = 0;
+			 break;
+
+		 case 2:
+			 Freddy.AI = 0;
+			 Bonnie.AI = 3;
+			 Chica.AI = 1;
+			 Foxy.AI = 1;
+			 break;
+
+		 case 3:
+			 Freddy.AI = 1;
+			 Bonnie.AI = 0;
+			 Chica.AI = 5;
+			 Foxy.AI = 2;
+			 break;
+
+		 case 4:
+			 Freddy.AI = halfandhalf(generator);
+			 Bonnie.AI = 2;
+			 Chica.AI = 4;
+			 Foxy.AI = 6;
+			 break;
+
+		 case 5:
+			 Freddy.AI = 3;
+			 Bonnie.AI = 5;
+			 Chica.AI = 7;
+			 Foxy.AI = 7;
+			 break;
+
+		 case 6:
+			 Freddy.AI = 4;
+			 Bonnie.AI = 10;
+			 Chica.AI = 12;
+			 Foxy.AI = 16;
+			 break;
+
+		 }
 
 		/* Room positions */
 		Freddy.Room = 1;
@@ -177,6 +218,7 @@ private:
 		GFreddy.Active = false;
 		GFreddy.WaitTS = GetTime();
 		GFreddy.Waiting = false;
+		GFreddy.Stage = 0;
 
 		/* Door properties */
 		Left.Lit = false;
