@@ -5,7 +5,7 @@
 
 int main() {
 
-	int LevelCarry = 1;
+	int LevelCarry = 2;
 
 	SetConsoleSize();
 	ShowConsoleCursor(false);
@@ -32,7 +32,7 @@ int main() {
 		if (Gameplay->Win)
 			LevelCarry += 1 * (Gameplay->Night < 5);
 		delete Gameplay;
-
+		system("CLS");
 	}
 
 	return EXIT_SUCCESS;

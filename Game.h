@@ -116,7 +116,7 @@ private:
 		 Camera = 1;
 		 Usage = 1;
 		 GameOver = false;
-		 ShowHelp = (Night == 1);
+		 ShowHelp = Night == 1;
 		 CameraErrorTS = 0;
 		 NoPower = false;
 		 PenaltyTS = GetTime();
@@ -227,6 +227,18 @@ private:
 		Right.Open = true;
 		Left.Broke = false;
 		Right.Broke = false;
+
+		/* Phone Call */
+		switch (Night) {
+
+			case 1: PlaySound(TEXT("Voiceover1.wav"), NULL, SND_NODEFAULT | SND_FILENAME | SND_ASYNC | SND_NOSTOP); break;
+			case 2: PlaySound(TEXT("Voiceover2.wav"), NULL, SND_NODEFAULT | SND_FILENAME | SND_ASYNC | SND_NOSTOP); break;
+			case 3: PlaySound(TEXT("Voiceover3.wav"), NULL, SND_NODEFAULT | SND_FILENAME | SND_ASYNC | SND_NOSTOP); break;
+			case 4: PlaySound(TEXT("Voiceover4.wav"), NULL, SND_NODEFAULT | SND_FILENAME | SND_ASYNC | SND_NOSTOP); break;
+			case 5: PlaySound(TEXT("Voiceover5.wav"), NULL, SND_NODEFAULT | SND_FILENAME | SND_ASYNC | SND_NOSTOP); break;
+
+
+		}
 
 	};
 

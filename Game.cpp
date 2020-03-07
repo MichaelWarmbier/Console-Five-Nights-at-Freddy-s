@@ -27,10 +27,10 @@ void Game::Draw() {
 		Draw_Clock(777, 15);
 
 		/* Help */
-		if (!ShowHelp)
-			DrawSprite(99, 563, 542);
+		if (ShowHelp)
+			DrawSprite(99, 563, 532);
 		else
-			DrawSprite(100, 563, 542);
+			DrawSprite(100, 563, 532);
 
 }
 
@@ -76,53 +76,58 @@ void Game::Input() {
 				Left.Lit = false;
 
 		}
+
 		if (KeyIsDown('Q', true, false) && !CameraUp && !Left.Broke)
 			Left.Open = !Left.Open;
 
 		if (KeyIsDown('E', true, false) && !CameraUp && !Right.Broke)
 			Right.Open = !Right.Open;
-		
+
 		if (KeyIsDown('H', true, false))
 			ShowHelp = !ShowHelp;
 
 		if (KeyIsDown('C', true, true) && KeyIsDown('D', true, true) && KeyIsDown('0', true, true))
 			Hour = 6;
 
+		if (KeyIsDown('M', true, true))
+			PlaySound(NULL, NULL, NULL);
+
+
 		/* Numpad specific controls */
-			if (KeyIsDown(103, true, false) && CameraUp)
-				Camera = 2;
+		if (KeyIsDown(103, true, false) && CameraUp)
+			Camera = 2;
 
-			if (KeyIsDown(104, true, false) && CameraUp)
-				Camera = 1;
+		if (KeyIsDown(104, true, false) && CameraUp)
+			Camera = 1;
 
-			if (KeyIsDown(105, true, false) && CameraUp)
-				Camera = 5;
+		if (KeyIsDown(105, true, false) && CameraUp)
+			Camera = 5;
 
-			if (KeyIsDown(100, true, false) && CameraUp)
-				Camera = 3;
+		if (KeyIsDown(100, true, false) && CameraUp)
+			Camera = 3;
 
-			if (KeyIsDown(101, true, false) && CameraUp)
-				Camera = 4;
+		if (KeyIsDown(101, true, false) && CameraUp)
+			Camera = 4;
 
-			if (KeyIsDown(102, true, false) && CameraUp)
-				Camera = 9;
+		if (KeyIsDown(102, true, false) && CameraUp)
+			Camera = 9;
 
-			if (KeyIsDown(97, true, false) && CameraUp)
-				Camera = 6;
+		if (KeyIsDown(97, true, false) && CameraUp)
+			Camera = 6;
 
-			if (KeyIsDown(98, true, false) && CameraUp)
-				Camera = 7;
+		if (KeyIsDown(98, true, false) && CameraUp)
+			Camera = 7;
 
-			if (KeyIsDown(99, true, false) && CameraUp)
-				Camera = 8;
+		if (KeyIsDown(99, true, false) && CameraUp)
+			Camera = 8;
 
-			if (KeyIsDown(96, true, false) && CameraUp)
-				Camera = 10;
+		if (KeyIsDown(96, true, false) && CameraUp)
+			Camera = 10;
 
-			if (KeyIsDown(110, true, false) && CameraUp)
-				Camera = 11;
+		if (KeyIsDown(110, true, false) && CameraUp)
+			Camera = 11;
+
 	}
-
 }
 
 void Game::Logic() {
@@ -153,17 +158,18 @@ void Game::Logic() {
 	if (!FreezePowerDrain)
 		PowerLogic();
 
-	if (GameOver && GetTimeSince(GameOverTS) > 1.3) {
-
+	if (GameOver && GetTimeSince(GameOverTS) > 1.3)
 		Exit = true;
-
-	}
 
 	if (Hour == 6) {
 
 		Win = Exit = true;
 		TransitionTS = GetTime();
 		system("CLS");
+
+		PlaySound(NULL, NULL, NULL);
+		PlaySound(TEXT("Kids Cheering.wav"), NULL, SND_NODEFAULT | SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+
 
 		while (GetTimeSince(TransitionTS) < 4)
 			DrawSprite(111, 385, 252);
@@ -1081,7 +1087,7 @@ void Game::PowerLogic() {
 
 	if (GetTimeSince(PenaltyTS) > (8.0 - tNight) && tNight != 1) {
 
-		Power -= 1.3;
+		Power -= .3;
 		PenaltyTS = GetTime();
 
 	}
