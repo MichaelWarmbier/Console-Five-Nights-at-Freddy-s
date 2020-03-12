@@ -1,5 +1,7 @@
 # Console Five Nights at Freddy's
 
+While this project may be competed in the future, it is currently postponed.
+
 Five Nights at Freddy's designed to run on a Windows console window.
 
 Programmed using C++, using Visual Studio 2019.
