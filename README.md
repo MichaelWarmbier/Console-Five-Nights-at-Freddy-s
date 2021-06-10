@@ -2,13 +2,13 @@
 
 Five Nights at Freddy's designed to run on a Windows console window.
 
+## Description
+
+This version is designed to be compact and focus mainly on the gameplay aspects of the game, omitting all significant horror and lore elements. The functionality is designed to mimic that of the original game as much as possible. Certain things were adjusted or removed (such as mouse control) due to the limitations of using standard libraries and the novel 2D perspective.
+
 Programmed using C++, using Visual Studio 2019.
 
 Five Nights at Freddy's is the point-and-click indie horror game that took the internet by storm, released on Jul 23rd, 2014. Developed by Scott Cawthon.
-
-## About The Console Version
-
-This version is designed to be compact and focus mainly on the gameplay aspects of the game, omitting all significant horror and lore elements. The functionality is designed to mimic that of the original game as much as possible. Certain things were adjusted or removed (such as mouse control) due to the limitations of using standard libraries and the novel 2D perspective.
 
 ## Controls
 
