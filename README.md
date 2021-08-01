@@ -4,7 +4,7 @@ Five Nights at Freddy's designed to run on a Windows console window.
 
 ## Description
 
-This version is designed to be compact and focus mainly on the gameplay aspects of the game, omitting all significant horror and lore elements. The functionality is designed to mimic that of the original game as much as possible. Certain things were adjusted or removed (such as mouse control) due to the limitations of using standard libraries and the novel 2D perspective.
+This program is designed to be compact and focus mainly on the gameplay aspects of the game, omitting all significant horror and lore elements. The functionality is designed to mimic that of the original game as much as possible. Certain things were adjusted or removed (such as mouse control) due to the limitations of using standard libraries and the novel 2D perspective.
 
 Programmed using C++, using Visual Studio 2019.
 
@@ -12,11 +12,15 @@ Five Nights at Freddy's is the point-and-click indie horror game that took the i
 
 ## Controls
 
-<> Arrow keys or NUMPAD -- Switch active camera
-SPACE -- Toggle Camera
-Q/E -- Door Controls
-A/D -- Light controls
-H -- Toggle Help
+<> Arrow keys or NUMPAD -- Switch active camera </br>
+SPACE -- Toggle Camera </br>
+Q/E -- Door Controls </br>
+A/D -- Light controls </br>
+H -- Toggle Help </br>
+
+## Installation
+
+This project isn't intended to be installed due to its unfinished state. However, you can compile it by creating a C++ project in visual studio. The current version of this program was never given a proper level system, as such whatever is defined in the code will repeat indefinitely.
 
 ## Gallery
 
